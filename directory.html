@@ -9,17 +9,27 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --almond:   #E9DACD;
-    --dimgray:  #72665C;
-    --cinnabar: #EC5D3D;
-    --keppel:   #6CC2B1;
-    --card-bg:  #DDD0C3;
+    /* "Dream" palette — cool blue/gray/black, swapped in from the warm terracotta scheme.
+       Variable NAMES kept the same (so every rule below still works) but the values now
+       point at the new palette. Same roles as before: --almond = light bg, --dimgray =
+       mid-dark card bg, --cinnabar = bright accent, --keppel = secondary accent, --dark = darkest tone. */
+    --almond:   #F4F4F4;  /* "Light" — was warm cream #E9DACD */
+    --dimgray:  #2F3E47;  /* "Stone" — was warm brown #72665C */
+    --cinnabar: #6CC2B1;  /* Keppel turquoise — the accent restored to its original teal, was pale blue-gray #9EB4D3 */
+    --keppel:   #BACCD0;  /* "Jet Stream" — secondary accent, unchanged */
+    --card-bg:  #DEE0E2;  /* "Cloud" — was #DDD0C3 */
+    /* Accessible variants — re-tuned to pass WCAG AA (4.5:1) against the specific
+       background each one actually sits on, same method as before, new hexes. */
+    --dark:         #101E28;  /* "Deep" — body/label text on Light, and dark-section bg */
+    --cinnabar-text:#41746A;  /* darkened Keppel turquoise — used as flatpickr selected-day bg (white text passes at 5.34:1) */
+    --keppel-dark:  #5D6668;  /* darkened Jet Stream — text/border on Light */
+    --keppel-light: #BACCD0;  /* Jet Stream itself is already light enough for text on --dimgray cards */
   }
 
   body {
     font-family: 'Syne', sans-serif;
-    background: var(--almond);
-    color: var(--dimgray);
+    background: var(--dimgray); /* Stone — now matches the AI Coordinator's dark page background */
+    color: var(--almond);
     min-height: 100vh;
   }
 
@@ -27,18 +37,22 @@
   .tabs {
     display: flex;
     gap: 0;
-    border-bottom: 2px solid var(--dimgray);
+    border-bottom: 2px solid var(--keppel);
     margin-bottom: 0;
   }
   .tab-btn {
     flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
     padding: 16px 20px;
     background: var(--almond);
     color: var(--dimgray);
     border: none;
     font-family: 'Syne', sans-serif;
     font-size: 13px;
-    font-weight: 700;
+    font-weight: 400;
     letter-spacing: 0.08em;
     text-transform: uppercase;
     cursor: pointer;
@@ -47,9 +61,16 @@
   }
   .tab-btn:last-child { border-right: none; }
   .tab-btn.active {
-    background: var(--dimgray);
-    color: var(--almond);
+    background: var(--cinnabar);
+    color: var(--dark);
   }
+  .tab-icon, .check-icon, .ai-icon {
+    width: 15px;
+    height: 15px;
+    flex-shrink: 0;
+    color: currentColor;
+  }
+  .ai-icon { width: 13px; height: 13px; }
   .tab-btn:hover:not(.active) { background: var(--card-bg); }
 
   /* ── PANELS ── */
@@ -59,25 +80,25 @@
   /* ── SECTION LABEL ── */
   .eyebrow {
     font-size: 11px;
-    font-weight: 700;
+    font-weight: 400;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: var(--keppel);
+    color: var(--keppel); /* Jet — sits directly on the dark page now, keppel-dark would vanish */
     margin-bottom: 10px;
   }
 
   /* ── DIRECTORY PANEL ── */
   .dir-header h2 {
+    font-family: 'Syne', sans-serif;
     font-size: 26px;
-    font-weight: 800;
-    color: var(--cinnabar);
+    font-weight: 400;
+    color: var(--cinnabar); /* bright accent — sits on the dark page, the darkened text variant would vanish */
     line-height: 1.2;
     margin-bottom: 6px;
   }
   .dir-header p {
     font-size: 14px;
-    color: var(--dimgray);
-    opacity: 0.8;
+    color: var(--almond); /* Light — sits directly on the dark page now */
     margin-bottom: 24px;
   }
 
@@ -102,7 +123,7 @@
     transition: border-color 0.2s;
   }
   .search-input:focus { border-color: var(--cinnabar); }
-  .search-input::placeholder { color: #A89D94; }
+  .search-input::placeholder { color: #9AA3A8; }
 
   .filter-btn {
     padding: 11px 16px;
@@ -111,16 +132,16 @@
     border-radius: 6px;
     font-family: 'Syne', sans-serif;
     font-size: 12px;
-    font-weight: 700;
-    color: var(--dimgray);
+    font-weight: 400;
+    color: var(--dark);
     cursor: pointer;
     transition: all 0.2s;
     letter-spacing: 0.04em;
   }
   .filter-btn.active, .filter-btn:hover {
-    background: var(--dimgray);
-    color: var(--almond);
-    border-color: var(--dimgray);
+    background: var(--cinnabar); /* bright accent — Stone would now be invisible against the page */
+    color: var(--dark);
+    border-color: var(--cinnabar);
   }
 
   /* City section */
@@ -131,21 +152,20 @@
     gap: 10px;
     margin-bottom: 14px;
     padding-bottom: 10px;
-    border-bottom: 1.5px solid var(--dimgray);
+    border-bottom: 1.5px solid var(--keppel); /* Jet — visible separator against the dark page */
   }
-  .city-flag { font-size: 20px; }
   .city-name {
+    font-family: 'Syne', sans-serif;
     font-size: 16px;
-    font-weight: 800;
-    color: var(--dimgray);
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
+    font-weight: 400;
+    color: var(--almond); /* Light — sits directly on the dark page now */
+    letter-spacing: 0.02em;
   }
   .city-incentive {
     margin-left: auto;
     font-size: 10px;
-    font-weight: 700;
-    color: var(--keppel);
+    font-weight: 400;
+    color: var(--keppel); /* Jet */
     letter-spacing: 0.08em;
     text-transform: uppercase;
     border: 1px solid var(--keppel);
@@ -153,70 +173,95 @@
     border-radius: 20px;
   }
 
-  /* Company cards */
+  /* Company cards — square, technical/panel look */
   .cards-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
     gap: 12px;
   }
   .company-card {
-    background: var(--dimgray);
-    border-radius: 8px;
+    position: relative;
+    aspect-ratio: 1 / 1;
+    background: #111111; /* slightly darker than the page (Stone) so cards still read as distinct panels */
+    border: 1px solid rgba(186,204,208,0.25); /* thin Jet-tinted line — "tech panel" edge */
+    border-radius: 3px;
     padding: 16px;
-    transition: transform 0.15s;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.15s, border-color 0.15s;
+    overflow: hidden;
   }
-  .company-card:hover { transform: translateY(-2px); }
+  .company-card::before {
+    /* top accent bar — small technical/status-indicator detail */
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--cinnabar);
+    opacity: 0.7;
+  }
+  .company-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--cinnabar);
+  }
   .card-category {
     font-size: 10px;
-    font-weight: 700;
+    font-weight: 400;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: var(--keppel);
-    margin-bottom: 6px;
+    color: var(--keppel-light);
+    margin-bottom: 8px;
+    font-family: 'Courier New', monospace; /* small monospace touch for the technical feel */
   }
   .card-name {
     font-size: 14px;
-    font-weight: 700;
-    color: var(--almond);
+    font-weight: 400;
+    color: #FFFFFF;
     margin-bottom: 6px;
     line-height: 1.3;
   }
   .card-desc {
-    font-size: 12px;
-    color: #BFB5AC;
+    font-size: 11.5px;
+    color: #E3E6E8;
     line-height: 1.5;
-    margin-bottom: 12px;
+    margin-bottom: 10px;
+    flex: 1;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
   }
   .card-link {
     font-size: 11px;
-    font-weight: 700;
-    color: var(--cinnabar);
-    text-decoration: none;
+    font-weight: 400;
+    color: #FFFFFF;
+    text-decoration: underline;
     letter-spacing: 0.06em;
     text-transform: uppercase;
+    margin-top: auto;
   }
-  .card-link:hover { text-decoration: underline; }
+  .card-link:hover { opacity: 0.8; }
 
   .no-results {
     text-align: center;
     padding: 40px;
-    color: var(--dimgray);
-    opacity: 0.5;
+    color: var(--almond);
+    opacity: 0.7; /* still 4.76:1+ on the dark page — verified */
     font-size: 14px;
   }
 
   /* ── BRIEF PANEL ── */
   .brief-header h2 {
+    font-family: 'Syne', sans-serif;
     font-size: 26px;
-    font-weight: 800;
-    color: var(--cinnabar);
+    font-weight: 400;
+    color: var(--cinnabar); /* bright accent — sits on the dark page */
     line-height: 1.2;
     margin-bottom: 6px;
   }
   .brief-header p {
     font-size: 14px;
-    color: var(--dimgray);
-    opacity: 0.8;
+    color: var(--almond); /* Light — sits on the dark page */
     margin-bottom: 28px;
   }
 
@@ -230,10 +275,10 @@
   .form-group.full { grid-column: 1 / -1; }
   .form-label {
     font-size: 11px;
-    font-weight: 700;
+    font-weight: 400;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--dimgray);
+    color: var(--almond); /* Light — sits on the dark page */
   }
   .form-control {
     padding: 11px 14px;
@@ -248,7 +293,7 @@
     width: 100%;
   }
   .form-control:focus { border-color: var(--cinnabar); }
-  .form-control::placeholder { color: #A89D94; }
+  .form-control::placeholder { color: #9AA3A8; }
 
   /* Checkbox group */
   .checkbox-group {
@@ -261,33 +306,33 @@
     align-items: center;
     gap: 7px;
     padding: 8px 14px;
-    border: 1.5px solid var(--dimgray);
+    border: 1.5px solid var(--keppel); /* Jet — dimgray border would vanish against the dark page */
     border-radius: 6px;
     cursor: pointer;
     font-size: 12px;
-    font-weight: 600;
-    color: var(--dimgray);
+    font-weight: 400;
+    color: var(--almond); /* Light — sits on the dark page */
     transition: all 0.15s;
     user-select: none;
   }
   .check-label input { display: none; }
   .check-label:has(input:checked),
   .check-label.checked {
-    background: var(--dimgray);
-    color: var(--almond);
-    border-color: var(--dimgray);
+    background: var(--cinnabar); /* bright accent — dimgray bg would vanish against the dark page */
+    color: var(--dark);
+    border-color: var(--cinnabar);
   }
 
   .submit-btn {
     width: 100%;
     padding: 15px;
-    background: var(--cinnabar);
+    background: var(--cinnabar-text); /* darkened Keppel turquoise, was the blue-gray #5F6C7F */
     color: white;
     border: none;
     border-radius: 8px;
     font-family: 'Syne', sans-serif;
     font-size: 14px;
-    font-weight: 800;
+    font-weight: 400;
     letter-spacing: 0.06em;
     text-transform: uppercase;
     cursor: pointer;
@@ -301,22 +346,26 @@
   .ai-response {
     display: none;
     margin-top: 24px;
-    background: var(--dimgray);
-    border-radius: 10px;
+    background: #111111; /* matches company-card — distinct panel against the page */
+    border: 1px solid rgba(186,204,208,0.25);
+    border-radius: 3px;
     padding: 24px;
   }
   .ai-response.visible { display: block; }
   .ai-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
     font-size: 10px;
-    font-weight: 700;
+    font-weight: 400;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: var(--keppel);
+    color: var(--keppel-light);
     margin-bottom: 12px;
   }
   .ai-text {
     font-size: 14px;
-    color: var(--almond);
+    color: #FFFFFF;
     line-height: 1.7;
     white-space: pre-wrap;
   }
@@ -331,18 +380,110 @@
     80%, 100%{ content: '...'; }
   }
 
+  @media (max-width: 900px) {
+    .city-picker-grid { grid-template-columns: repeat(3, 1fr); }
+  }
   @media (max-width: 600px) {
     .panel { padding: 24px 18px; }
     .form-grid { grid-template-columns: 1fr; }
     .cards-grid { grid-template-columns: 1fr; }
+    .city-picker-grid { grid-template-columns: repeat(2, 1fr); }
   }
+
+  /* ── CITY PICKER (directory landing view) — edge-to-edge filmstrip gallery, sharp corners ── */
+  .city-picker-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 2px;
+    margin-top: 4px;
+  }
+  .city-pick-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 0; /* sharp edges, no rounding */
+    cursor: pointer;
+    transition: transform 0.15s;
+    text-align: left;
+    aspect-ratio: 3 / 4;
+    background-color: var(--dimgray); /* fallback shown while a photo loads, or if one is ever missing */
+    background-size: cover;
+    background-position: center;
+  }
+  .city-pick-card:hover .city-pick-photo { transform: scale(1.06); }
+  .city-pick-photo {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+  /* Gradient scrim so text stays legible over ANY photo — bottom is ~92% opaque Dark,
+     which is what keeps the white/mint text passing WCAG AA regardless of the image underneath. */
+  .city-pick-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(16,30,40,0.05) 0%, rgba(16,30,40,0.25) 50%, rgba(16,30,40,0.92) 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 16px;
+  }
+  .city-pick-name {
+    font-family: 'Syne', sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    color: #FFFFFF;
+    margin-bottom: 2px;
+  }
+  .city-pick-country { font-size: 12px; color: #E3E6E8; margin-bottom: 10px; }
+  .city-pick-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--keppel-light);
+    font-weight: 400;
+    letter-spacing: 0.04em;
+  }
+  .city-pick-incentive {
+    font-size: 10px;
+    font-weight: 400;
+    color: var(--keppel-dark);
+    background: var(--almond);
+    border-radius: 20px;
+    padding: 2px 8px;
+  }
+  .back-to-cities {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: none;
+    border: none;
+    font-family: 'Syne', sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--cinnabar); /* raw teal reads at 5.25:1 on the dark page — the darkened variant was failing here at 2.07:1 */
+    cursor: pointer;
+    letter-spacing: 0.04em;
+    margin-bottom: 16px;
+    padding: 0;
+  }
+  .back-to-cities:hover { text-decoration: underline; }
+
+  /* ── Flatpickr calendar, restyled to match brand ── */
+  .flatpickr-calendar { font-family: 'Syne', sans-serif; box-shadow: 0 8px 24px rgba(0,0,0,0.25); }
+  .flatpickr-day.selected, .flatpickr-day.startRange, .flatpickr-day.endRange {
+    background: var(--cinnabar-text); border-color: var(--cinnabar-text);
+  }
+  .flatpickr-day.inRange { background: #D6E8F3; border-color: #D6E8F3; box-shadow: -5px 0 0 #D6E8F3, 5px 0 0 #D6E8F3; }
+  .flatpickr-day:hover { background: var(--almond); }
 </style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 </head>
 <body>
 
 <div class="tabs">
-  <button class="tab-btn active" onclick="switchTab('directory')">🌍 City Directory</button>
-  <button class="tab-btn" onclick="switchTab('brief')">🎬 Submit Your Shoot</button>
+  <button class="tab-btn active" onclick="switchTab('directory')"><svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> City Directory</button>
+  <button class="tab-btn" onclick="switchTab('brief')"><svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 7l2.5-4h4L7 7M8.5 7 11 3h4l-1.5 4M15 7l2.5-4h4L19 7M2 7h20v3H2z"/><rect x="2" y="10" width="20" height="11" rx="1"/></svg> Submit Your Shoot</button>
 </div>
 
 <!-- ── DIRECTORY PANEL ── -->
@@ -388,7 +529,7 @@
     </div>
     <div class="form-group">
       <label class="form-label">Shoot Dates</label>
-      <input class="form-control" type="text" id="shootDates" placeholder="e.g. 15–22 Aug 2025">
+      <input class="form-control" type="text" id="shootDates" placeholder="Click to pick your shoot dates" readonly style="cursor:pointer;">
     </div>
     <div class="form-group">
       <label class="form-label">Crew Size</label>
@@ -416,12 +557,12 @@
     <div class="form-group full">
       <label class="form-label">Services needed</label>
       <div class="checkbox-group" id="servicesGroup">
-        <label class="check-label"><input type="checkbox" value="Equipment Rental"> 🎥 Equipment Rental</label>
-        <label class="check-label"><input type="checkbox" value="Transport"> 🚐 Transport & Drivers</label>
-        <label class="check-label"><input type="checkbox" value="Catering"> 🍱 Catering & Craft Services</label>
-        <label class="check-label"><input type="checkbox" value="Art Storage"> 📦 Art Department Storage</label>
-        <label class="check-label"><input type="checkbox" value="Local Fixer"> 🏢 Local Fixer / Production House</label>
-        <label class="check-label"><input type="checkbox" value="Gear Shipping"> 🚢 Gear Shipping & Customs</label>
+        <label class="check-label"><input type="checkbox" value="Equipment Rental"><svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg> Equipment Rental</label>
+        <label class="check-label"><input type="checkbox" value="Transport"><svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="7" width="15" height="10" rx="1"/><path d="M16 10h4l3 3v4h-7z"/><circle cx="6" cy="19" r="2"/><circle cx="18" cy="19" r="2"/></svg> Transport & Drivers</label>
+        <label class="check-label"><input type="checkbox" value="Catering"><svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 2v6a2 2 0 0 0 2 2h0a2 2 0 0 0 2-2V2M9 10v12M17 2c-1.7 0-3 2.5-3 5.5S15.3 12 17 12M17 2v20"/></svg> Catering & Craft Services</label>
+        <label class="check-label"><input type="checkbox" value="Art Storage"><svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="5" rx="1"/><path d="M4 9v9a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9M10 13h4"/></svg> Art Department Storage</label>
+        <label class="check-label"><input type="checkbox" value="Local Fixer"><svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="1"/><path d="M9 22v-4h6v4M8 7h1M15 7h1M8 11h1M15 11h1M8 15h1M15 15h1"/></svg> Local Fixer / Production House</label>
+        <label class="check-label"><input type="checkbox" value="Gear Shipping"><svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8l-9-5-9 5 9 5 9-5z"/><path d="M3 8v8l9 5 9-5V8M12 13v8"/></svg> Gear Shipping & Customs</label>
       </div>
     </div>
     <div class="form-group full">
@@ -433,7 +574,7 @@
   <button class="submit-btn" id="submitBtn" onclick="submitBrief()">Find My Local Partners →</button>
 
   <div class="ai-response" id="aiResponse">
-    <div class="ai-label">⚡ ProdAbroad AI Coordinator</div>
+    <div class="ai-label"><svg class="ai-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M13 2 3 14h7l-1 8 10-12h-7l1-8z"/></svg> ProdAbroad AI Coordinator</div>
     <div class="ai-text" id="aiText"></div>
   </div>
 </div>
@@ -444,59 +585,84 @@
 // page is served from. Never put an Anthropic API key in this file.
 const WORKER_URL = '/.netlify/functions/proxy';
 
+// ── CITY PHOTOS ──
+// Placeholder free-license photos (Unsplash) — swap each URL for Maya's own
+// landscape photo once provided. Keys must match the `city` values in DIRECTORY below.
+const CITY_IMAGES = {
+  'Berlin':    'https://i.postimg.cc/ydF4cxGF/berlin3.jpg',
+  'London':    'https://i.postimg.cc/rmSXxsHN/london.jpg',
+  'Paris':     'https://i.postimg.cc/3Rg5mNqC/PARIS.jpg',
+  'Tel Aviv':  'https://i.postimg.cc/B6x9HbzT/TELAVIV.jpg',
+  'Zagreb':    'https://i.postimg.cc/sXpd7xLc/Zagreb.jpg',
+  'Athens':    'https://i.postimg.cc/3RQz87wd/IMG-9149.jpg',
+};
+
 // ── DIRECTORY DATA ──
 const DIRECTORY = [
   // BERLIN
-  { city:'Berlin', country:'Germany', flag:'🇩🇪', incentive:'', category:'Equipment Rental', name:'RGB Rental', desc:'Full camera/grip/lighting packages, on-set technical support, ATA Carnet handling for international crews.', url:'rgbrental.com' },
-  { city:'Berlin', country:'Germany', flag:'🇩🇪', incentive:'', category:'Equipment Rental', name:'Vantage Film', desc:'Specializes in anamorphic lenses (Hawk), premium cinema optics for high-end productions.', url:'vantagefilm.com' },
-  { city:'Berlin', country:'Germany', flag:'🇩🇪', incentive:'', category:'Equipment Rental', name:'Basiliscus Film', desc:'Cameras, audio, LED lighting, tripods/sliders — field-tested gear from active productions.', url:'basiliscus.net' },
-  { city:'Berlin', country:'Germany', flag:'🇩🇪', incentive:'', category:'Transport', name:'Movie Work', desc:'Production vehicles, equipment trucks, crew shuttle/chauffeur service, generator fueling — since 2007.', url:'moviework.de' },
-  { city:'Berlin', country:'Germany', flag:'🇩🇪', incentive:'', category:'Transport', name:'Silent Running', desc:'Fleet of ~100 film-specialized vehicles (makeup trailers, costume trucks, tech vehicles), solar-powered green fleet.', url:'silent-running.com' },
-  { city:'Berlin', country:'Germany', flag:'🇩🇪', incentive:'', category:'Catering', name:'Seggert Filmcatering', desc:'Full set catering — 1,300+ productions since 1999, experienced with international crews.', url:'seggert-catering.com' },
-  { city:'Berlin', country:'Germany', flag:'🇩🇪', incentive:'', category:'Catering', name:'Cinecat', desc:'Full film catering, kitchen trucks, fresh food cooked on set.', url:'cinecat.de' },
-  { city:'Berlin', country:'Germany', flag:'🇩🇪', incentive:'', category:'Fixer', name:'Berlin Production Service', desc:'Full production support: crew, permits, transportation, catering, equipment — multilingual.', url:'berlinproductionservice.com' },
-  { city:'Berlin', country:'Germany', flag:'🇩🇪', incentive:'', category:'Fixer', name:'Neon Island Studio', desc:'Local fixers, film service productions, art department, international crew support.', url:'neonisland.studio' },
-  { city:'Berlin', country:'Germany', flag:'🇩🇪', incentive:'', category:'Fixer', name:'PTB Production Team Berlin', desc:'Full-service packages: planning, crew, equipment, locations, catering, transport — one contact.', url:'ptb-filmservice.de' },
+  { city:'Berlin', country:'Germany', incentive:'', category:'Equipment Rental', name:'RGB Rental', desc:'Full camera/grip/lighting packages, on-set technical support, ATA Carnet handling for international crews.', url:'rgbrental.com' },
+  { city:'Berlin', country:'Germany', incentive:'', category:'Equipment Rental', name:'Vantage Film', desc:'Specializes in anamorphic lenses (Hawk), premium cinema optics for high-end productions.', url:'vantagefilm.com' },
+  { city:'Berlin', country:'Germany', incentive:'', category:'Equipment Rental', name:'Basiliscus Film', desc:'Cameras, audio, LED lighting, tripods/sliders — field-tested gear from active productions.', url:'basiliscus.net' },
+  { city:'Berlin', country:'Germany', incentive:'', category:'Transport', name:'Movie Work', desc:'Production vehicles, equipment trucks, crew shuttle/chauffeur service, generator fueling — since 2007.', url:'moviework.de' },
+  { city:'Berlin', country:'Germany', incentive:'', category:'Transport', name:'Silent Running', desc:'Fleet of ~100 film-specialized vehicles (makeup trailers, costume trucks, tech vehicles), solar-powered green fleet.', url:'silent-running.com' },
+  { city:'Berlin', country:'Germany', incentive:'', category:'Catering', name:'Seggert Filmcatering', desc:'Full set catering — 1,300+ productions since 1999, experienced with international crews.', url:'seggert-catering.com' },
+  { city:'Berlin', country:'Germany', incentive:'', category:'Catering', name:'Cinecat', desc:'Full film catering, kitchen trucks, fresh food cooked on set.', url:'cinecat.de' },
+  { city:'Berlin', country:'Germany', incentive:'', category:'Fixer', name:'Berlin Production Service', desc:'Full production support: crew, permits, transportation, catering, equipment — multilingual.', url:'berlinproductionservice.com' },
+  { city:'Berlin', country:'Germany', incentive:'', category:'Fixer', name:'Neon Island Studio', desc:'Local fixers, film service productions, art department, international crew support.', url:'neonisland.studio' },
+  { city:'Berlin', country:'Germany', incentive:'', category:'Fixer', name:'PTB Production Team Berlin', desc:'Full-service packages: planning, crew, equipment, locations, catering, transport — one contact.', url:'ptb-filmservice.de' },
+  { city:'Berlin', country:'Germany', incentive:'', category:'Production Company', name:'Watchmen Productions', desc:'Full-service production company since 2004 — commercials, corporate films, series, features across Germany, Austria and German-speaking Switzerland; past clients include Netflix, Disney+, Apple, BMW.', url:'watchmen.de' },
 
   // LONDON
-  { city:'London', country:'United Kingdom', flag:'🇬🇧', incentive:'', category:'Equipment Rental', name:'Shoot Blue', desc:'Camera and lighting rental — ARRI, Sony, Canon, RED, vintage lenses, 2,000+ products, 20,000+ hires.', url:'shootblue.tv' },
-  { city:'London', country:'United Kingdom', flag:'🇬🇧', incentive:'', category:'Equipment Rental', name:'Moonshine Film', desc:'Boutique rental house in Pimlico — cameras, lenses, sound, drones, remote focus. Open Mon–Sun.', url:'moonshinefilm.com' },
-  { city:'London', country:'United Kingdom', flag:'🇬🇧', incentive:'', category:'Equipment Rental', name:'The Kit Room', desc:'Shoreditch-based, professional TV/film camera and sound equipment, supports Albert Certification.', url:'thekitroom.co.uk' },
-  { city:'London', country:'United Kingdom', flag:'🇬🇧', incentive:'', category:'Equipment Rental', name:'Cameraworks', desc:'Pro camera and lighting rentals, 10+ years in Shoreditch, eco-partnership with One Tribe.', url:'cameraworks.co.uk' },
-  { city:'London', country:'United Kingdom', flag:'🇬🇧', incentive:'', category:'Fixer', name:'NEEDaFIXER London', desc:'Permits, customs clearance, vehicle hire, equipment, crew — specialists in international productions.', url:'needafixer.com' },
-  { city:'London', country:'United Kingdom', flag:'🇬🇧', incentive:'', category:'Fixer', name:'Here Now Films', desc:'Film and TV fixers across UK — crew, permits, equipment, strong local authority relationships.', url:'herenow.film' },
+  { city:'London', country:'United Kingdom', incentive:'', category:'Equipment Rental', name:'Shoot Blue', desc:'Camera and lighting rental — ARRI, Sony, Canon, RED, vintage lenses, 2,000+ products, 20,000+ hires.', url:'shootblue.tv' },
+  { city:'London', country:'United Kingdom', incentive:'', category:'Equipment Rental', name:'Moonshine Film', desc:'Boutique rental house in Pimlico — cameras, lenses, sound, drones, remote focus. Open Mon–Sun.', url:'moonshinefilm.com' },
+  { city:'London', country:'United Kingdom', incentive:'', category:'Equipment Rental', name:'The Kit Room', desc:'Shoreditch-based, professional TV/film camera and sound equipment, supports Albert Certification.', url:'thekitroom.co.uk' },
+  { city:'London', country:'United Kingdom', incentive:'', category:'Equipment Rental', name:'Cameraworks', desc:'Pro camera and lighting rentals, 10+ years in Shoreditch, eco-partnership with One Tribe.', url:'cameraworks.co.uk' },
+  { city:'London', country:'United Kingdom', incentive:'', category:'Fixer', name:'NEEDaFIXER London', desc:'Permits, customs clearance, vehicle hire, equipment, crew — specialists in international productions.', url:'needafixer.com' },
+  { city:'London', country:'United Kingdom', incentive:'', category:'Fixer', name:'Here Now Films', desc:'Film and TV fixers across UK — crew, permits, equipment, strong local authority relationships.', url:'herenow.film' },
+  { city:'London', country:'United Kingdom', incentive:'', category:'Equipment Rental', name:'Hi-TEN', desc:'Full-service Film + TV rental — cameras, lenses, lighting, grip, power, sound.', url:'hi-ten.co.uk' },
+  { city:'London', country:'United Kingdom', incentive:'', category:'Production Company', name:'The Production Fixers', desc:'Production support for commercials, documentaries, film, TV and branded content across the UK — casting, crew hiring, location scouting, permits, logistics.', url:'theproductionfixers.com' },
+  { city:'London', country:'United Kingdom', incentive:'', category:'Production Company', name:'Planet Positive Production', desc:'UK commercial production services — crew coordination, location management, talent liaison, logistics across broadcast, branded content, corporate, digital and documentary work.', url:'planetpositiveproduction.com' },
 
   // PARIS
-  { city:'Paris', country:'France', flag:'🇫🇷', incentive:'', category:'Equipment Rental', name:'Rouchon Paris', desc:'30+ years in lighting/equipment hire — cameras, grips, full booking and delivery for visiting productions.', url:'rouchonparis.com' },
-  { city:'Paris', country:'France', flag:'🇫🇷', incentive:'', category:'Equipment Rental', name:'French Production Service', desc:'Equipment rental for film, documentary, commercial — cameras, sound, lighting, machinery, delivery.', url:'frenchproductionservice.com' },
-  { city:'Paris', country:'France', flag:'🇫🇷', incentive:'', category:'Catering', name:'La Poêle à Film', desc:'Film set catering specialists since 1987 — one of France\'s first dedicated film caterers, mobile kitchen trucks.', url:'lapoeleafilm.com' },
-  { city:'Paris', country:'France', flag:'🇫🇷', incentive:'', category:'Catering', name:'La Cantine qui Tourne', desc:'Film/cinema set catering, officially listed on Film Paris Region — works with cinema and advertising productions.', url:'filmparisregion.com' },
-  { city:'Paris', country:'France', flag:'🇫🇷', incentive:'', category:'Fixer', name:'NEEDaFIXER France', desc:'Fixers, permits, crew, equipment, transport, catering, accommodation, language support across France.', url:'needafixer.com' },
+  { city:'Paris', country:'France', incentive:'', category:'Equipment Rental', name:'Rouchon Paris', desc:'30+ years in lighting/equipment hire — cameras, grips, full booking and delivery for visiting productions.', url:'rouchonparis.com' },
+  { city:'Paris', country:'France', incentive:'', category:'Equipment Rental', name:'French Production Service', desc:'Equipment rental (cameras, lenses, lighting, sound, monitoring) plus executive production services — project management, crew coordination and full shooting support for documentaries, commercials and institutional films.', url:'frenchproductionservice.com' },
+  { city:'Paris', country:'France', incentive:'', category:'Catering', name:'La Poêle à Film', desc:'Film set catering specialists since 1987 — one of France\'s first dedicated film caterers, mobile kitchen trucks.', url:'lapoeleafilm.com' },
+  { city:'Paris', country:'France', incentive:'', category:'Catering', name:'La Cantine qui Tourne', desc:'Film/cinema set catering, officially listed on Film Paris Region — works with cinema and advertising productions.', url:'filmparisregion.com' },
+  { city:'Paris', country:'France', incentive:'', category:'Fixer', name:'NEEDaFIXER France', desc:'Fixers, permits, crew, equipment, transport, catering, accommodation, language support across France.', url:'needafixer.com' },
+  { city:'Paris', country:'France', incentive:'', category:'Production Company', name:'Voulez-Vous Production Services', desc:'Filming and post-production for feature films and series in France — 25+ years combined experience, expertise in maximizing France\'s 30–40% tax rebate.', url:'voulezvousprod.com' },
+  { city:'Paris', country:'France', incentive:'', category:'Production Company', name:'Mbrella Films', desc:'Line-budget, permits, locations and full production services in France — English-speaking producers, 10+ years pre- to post-production experience.', url:'mbrellafilms.com' },
 
   // TEL AVIV
-  { city:'Tel Aviv', country:'Israel', flag:'🇮🇱', incentive:'', category:'Equipment Rental', name:'Utopia Camera Services', desc:'Largest rental/sales facility in Israel — 20+ years serving film, broadcast and video productions.', url:'utopiacam.com' },
-  { city:'Tel Aviv', country:'Israel', flag:'🇮🇱', incentive:'', category:'Equipment Rental', name:'Movie Mobile', desc:'32+ years, served Fauda, False Flag, Black Space and major international productions. 12,000m² compound.', url:'mntntop.com' },
-  { city:'Tel Aviv', country:'Israel', flag:'🇮🇱', incentive:'', category:'Equipment Rental', name:'Glikson Camera Rental', desc:'Cameras and lenses, WhatsApp booking, 20 min from Ben Gurion airport — ideal for fast turnaround.', url:'arielglikson.com' },
-  { city:'Tel Aviv', country:'Israel', flag:'🇮🇱', incentive:'', category:'Fixer', name:'Israel Fixers', desc:'Full production service — transport, gear rentals, permits, location scouting, accommodation.', url:'israelfixers.com' },
-  { city:'Tel Aviv', country:'Israel', flag:'🇮🇱', incentive:'', category:'Fixer', name:'Biblical Productions', desc:'Equipment rental coordination, crew, permits, transportation — specialists for international productions.', url:'biblicalproductions.com' },
+  { city:'Tel Aviv', country:'Israel', incentive:'', category:'Equipment Rental', name:'Utopia Camera Services', desc:'Largest rental/sales facility in Israel — 20+ years serving film, broadcast and video productions.', url:'utopiacam.com' },
+  { city:'Tel Aviv', country:'Israel', incentive:'', category:'Equipment Rental', name:'Movie Mobile', desc:'32+ years, served Fauda, False Flag, Black Space and major international productions. 12,000m² compound.', url:'mntntop.com' },
+  { city:'Tel Aviv', country:'Israel', incentive:'', category:'Equipment Rental', name:'Glikson Camera Rental', desc:'Cameras and lenses, WhatsApp booking, 20 min from Ben Gurion airport — ideal for fast turnaround.', url:'arielglikson.com' },
+  { city:'Tel Aviv', country:'Israel', incentive:'', category:'Fixer', name:'Israel Fixers', desc:'Full production service — transport, gear rentals, permits, location scouting, accommodation.', url:'israelfixers.com' },
+  { city:'Tel Aviv', country:'Israel', incentive:'', category:'Fixer', name:'Biblical Productions', desc:'Equipment rental coordination, crew, permits, transportation — specialists for international productions.', url:'biblicalproductions.com' },
+  { city:'Tel Aviv', country:'Israel', incentive:'', category:'Production Company', name:'Highlight Films', desc:'Camera crews, documentary and corporate video production, aerial drone filming, editing and stock footage — serving international productions across Israel since 1998.', url:'highlight.co.il' },
+  { city:'Tel Aviv', country:'Israel', incentive:'', category:'Production Company', name:'770 Productions', desc:'Full video production services in Israel — corporate videos, documentaries, commercials, news, interviews, drone footage, camera crews and equipment rentals.', url:'770productions.co.il' },
 
   // ZAGREB
-  { city:'Zagreb', country:'Croatia', flag:'🇭🇷', incentive:'25% rebate', category:'Equipment Rental', name:'World Production Service', desc:'Full gear support — cameras, lights, sound, rigs, drones — same-day delivery across Croatia.', url:'worldproductionservice.com' },
-  { city:'Zagreb', country:'Croatia', flag:'🇭🇷', incentive:'25% rebate', category:'Transport', name:'FILMCroatia', desc:'Transportation, accommodation, catering logistics — proven local service providers, competitive day rates.', url:'filmcroatia.com' },
-  { city:'Zagreb', country:'Croatia', flag:'🇭🇷', incentive:'25% rebate', category:'Fixer', name:'FILMCroatia', desc:'Full production service since 2004 — bilingual crews, non-union, permits, customs, medical, security.', url:'filmcroatia.com' },
-  { city:'Zagreb', country:'Croatia', flag:'🇭🇷', incentive:'25% rebate', category:'Fixer', name:'Fixers in Croatia', desc:'Since 2013 — permits, equipment, crew, logistics across all of Croatia; customs clearance for imported gear.', url:'fixersincroatia.com' },
-  { city:'Zagreb', country:'Croatia', flag:'🇭🇷', incentive:'25% rebate', category:'Fixer', name:'Swixer Croatia', desc:'Location scouting, permits, fixers, crew hire, catering — Dubrovnik to Zagreb and beyond.', url:'swixer.com' },
+  { city:'Zagreb', country:'Croatia', incentive:'25% rebate', category:'Equipment Rental', name:'3Z Rent', desc:'Zagreb-based filmmaking gear rental — cameras, lenses, lighting, grip, audio, camera support and monitoring, with rental periods from one day to a week.', url:'3z.rent' },
+  { city:'Zagreb', country:'Croatia', incentive:'25% rebate', category:'Fixer', name:'FILMCroatia', desc:'Full production service since 2004 — bilingual crews, non-union, permits, customs, medical, security, transportation and accommodation logistics.', url:'filmcroatia.com' },
+  { city:'Zagreb', country:'Croatia', incentive:'25% rebate', category:'Fixer', name:'Fixers in Croatia', desc:'Since 2013 — permits, equipment, crew, logistics, transport between locations and customs clearance for imported gear across all of Croatia.', url:'fixersincroatia.com' },
+  { city:'Zagreb', country:'Croatia', incentive:'25% rebate', category:'Fixer', name:'Swixer Croatia', desc:'Location scouting, permits, fixers, crew hire, catering — Dubrovnik to Zagreb and beyond.', url:'swixer.com' },
+  { city:'Zagreb', country:'Croatia', incentive:'25% rebate', category:'Fixer', name:'Stills & Films', desc:'UK/US trained crews, DOP, broadcast rigs, 20+ years — clients include BBC, Reuters, UEFA, Netflix.', url:'stillsandfilms.com' },
+  { city:'Zagreb', country:'Croatia', incentive:'25% rebate', category:'Production Company', name:'Embassy Films', desc:'Production services for film, TV and commercials in Croatia and the region since 2003 — clients include Netflix, HBO, Amazon, Universal.', url:'embassyfilms.com' },
+  { city:'Zagreb', country:'Croatia', incentive:'25% rebate', category:'Production Company', name:'Formula Film', desc:'Location scouting, crewing & casting, shooting permits, legal/accounting support, budgeting, equipment access and post-production across Croatia and the region.', url:'formulafilm.hr' },
 
   // ATHENS
-  { city:'Athens', country:'Greece', flag:'🇬🇷', incentive:'40% rebate', category:'Equipment Rental', name:'Fixers in Greece', desc:'Full cinema packages — RED, ARRI, Sony; ARRI SkyPanel lighting; Sennheiser audio; 24/7 on-set support.', url:'fixersingreece.gr' },
-  { city:'Athens', country:'Greece', flag:'🇬🇷', incentive:'40% rebate', category:'Equipment Rental', name:'Fixer in Greece', desc:'Works with top Greek equipment companies — camera, sound, lighting, heli mounts, OB vans.', url:'fixeringreece.com' },
-  { city:'Athens', country:'Greece', flag:'🇬🇷', incentive:'40% rebate', category:'Transport', name:'NEEDaFIXER Greece', desc:'Transport and logistics for crews — accommodation, per diem, crew transport, equipment handling.', url:'needafixer.com' },
-  { city:'Athens', country:'Greece', flag:'🇬🇷', incentive:'40% rebate', category:'Catering', name:'NEEDaFIXER Greece', desc:'Crew catering management as part of full production service — accommodation and catering bundled.', url:'needafixer.com' },
-  { city:'Athens', country:'Greece', flag:'🇬🇷', incentive:'40% rebate', category:'Fixer', name:'NEEDaFIXER Athens', desc:'Full production services — permits, crew, equipment, catering, transport. Credits: BBC, Netflix, Disney+.', url:'needafixer.com' },
-  { city:'Athens', country:'Greece', flag:'🇬🇷', incentive:'40% rebate', category:'Fixer', name:'Swixer Greece', desc:'Full production service from prep to post — feature films, commercials, documentaries, stills.', url:'swixer.com' },
+  { city:'Athens', country:'Greece', incentive:'40% rebate', category:'Equipment Rental', name:'CEKTA', desc:'Greek camera equipment rental — cinematography cameras, lenses (including rehoused Carl Zeiss Jena sets), lighting, monitors, tripods and production accessories.', url:'cekta.gr' },
+  { city:'Athens', country:'Greece', incentive:'40% rebate', category:'Fixer', name:'Fixers in Greece', desc:'Athens-based since 2013 — BBC Studios, Netflix, Disney+, Warner Bros. Discovery. Full cinema packages: RED, ARRI, Sony; ARRI SkyPanel lighting; Sennheiser audio; 24/7 on-set support, crew, permits, security.', url:'fixersingreece.gr' },
+  { city:'Athens', country:'Greece', incentive:'40% rebate', category:'Fixer', name:'Fixer in Greece', desc:'Founded by producer/fixer with 10+ years — permits, scouting, catering, transport, crew, equipment; works with top Greek equipment companies including camera, sound, lighting, heli mounts, OB vans.', url:'fixeringreece.com' },
+  { city:'Athens', country:'Greece', incentive:'40% rebate', category:'Fixer', name:'NEEDaFIXER Athens', desc:'Full production services — permits, crew, equipment, catering, transport, accommodation, per diem. Credits: BBC, Netflix, Disney+.', url:'needafixer.com' },
+  { city:'Athens', country:'Greece', incentive:'40% rebate', category:'Fixer', name:'Swixer Greece', desc:'Full production service from prep to post — feature films, commercials, documentaries, stills; drivers, catering and full logistics coordinated with the shoot schedule.', url:'swixer.com' },
+  { city:'Athens', country:'Greece', incentive:'40% rebate', category:'Production Company', name:'Instafilms', desc:'Video production throughout Athens — concept development, scriptwriting, filming, editing and post-production for corporate videos, promos, brand stories and event coverage.', url:'instafilms.eu' },
+  { city:'Athens', country:'Greece', incentive:'40% rebate', category:'Production Company', name:'Takes Two', desc:'Athens-based production company — commercials, shorts, web videos, documentaries and animation, plus production services for international producers filming in Greece; in-house post-production studio.', url:'takes2.gr' },
+  { city:'Athens', country:'Greece', incentive:'40% rebate', category:'Production Company', name:'Green Olive Films', desc:'Full production services in Greece and Cyprus since 1996 — casting, crew hiring, location scouting, post-production; credits include Netflix\'s Find Me Falling and Paramount+\'s The Castaways.', url:'greenolivefilms.com' },
 ];
 
 let currentFilter = 'all';
+let selectedCity = null;
 
 function setFilter(filter, btn) {
   currentFilter = filter;
@@ -510,10 +676,53 @@ function filterDirectory() {
   renderDirectory(query, currentFilter);
 }
 
+function selectCity(city) {
+  selectedCity = city;
+  document.getElementById('searchInput').value = '';
+  renderDirectory('', currentFilter);
+}
+
+function clearCitySelection() {
+  selectedCity = null;
+  const query = document.getElementById('searchInput').value.toLowerCase();
+  renderDirectory(query, currentFilter);
+}
+
+function renderCityPicker(container) {
+  const cities = [...new Set(DIRECTORY.map(c => c.city))];
+  container.innerHTML = `
+    <div class="city-picker-grid">
+      ${cities.map(city => {
+        const cityData = DIRECTORY.find(c => c.city === city);
+        const count = DIRECTORY.filter(c => c.city === city).length;
+        const photo = CITY_IMAGES[city] || '';
+        return `
+          <div class="city-pick-card" onclick="selectCity('${city}')">
+            ${photo ? `<img class="city-pick-photo" src="${photo}" alt="${city}, ${cityData.country}" loading="lazy">` : ''}
+            <div class="city-pick-overlay">
+              <div class="city-pick-name">${city}</div>
+              <div class="city-pick-country">${cityData.country}</div>
+              <div class="city-pick-meta">
+                <span>${count} provider${count === 1 ? '' : 's'}</span>
+                ${cityData.incentive ? `<span class="city-pick-incentive">${cityData.incentive}</span>` : ''}
+              </div>
+            </div>
+          </div>`;
+      }).join('')}
+    </div>`;
+}
+
 function renderDirectory(query = '', filter = 'all') {
   const container = document.getElementById('directoryContent');
-  const cities = [...new Set(DIRECTORY.map(c => c.city))];
-  let html = '';
+
+  // Landing view: nothing searched, no filter chip active, no city chosen yet — show the city picker
+  if (!selectedCity && !query && filter === 'all') {
+    renderCityPicker(container);
+    return;
+  }
+
+  const cities = selectedCity ? [selectedCity] : [...new Set(DIRECTORY.map(c => c.city))];
+  let html = selectedCity ? `<button class="back-to-cities" onclick="clearCitySelection()">← All cities</button>` : '';
   let totalShown = 0;
 
   cities.forEach(city => {
@@ -536,7 +745,6 @@ function renderDirectory(query = '', filter = 'all') {
     html += `
       <div class="city-block">
         <div class="city-title">
-          <span class="city-flag">${cityData.flag}</span>
           <span class="city-name">${city}, ${cityData.country}</span>
           ${cityData.incentive ? `<span class="city-incentive">${cityData.incentive}</span>` : ''}
         </div>
@@ -554,7 +762,7 @@ function renderDirectory(query = '', filter = 'all') {
   });
 
   if (totalShown === 0) {
-    html = `<div class="no-results">No results found for "${query}". Try a city name, service type, or company name.</div>`;
+    html += `<div class="no-results">No results found for "${query}". Try a city name, service type, or company name.</div>`;
   }
 
   container.innerHTML = html;
@@ -653,6 +861,15 @@ document.querySelectorAll('.check-label').forEach(label => {
       label.classList.toggle('checked', input.checked);
     }, 0);
   });
+});
+
+// Shoot Dates — Skyscanner-style range calendar (Flatpickr, free/MIT, no key required)
+flatpickr('#shootDates', {
+  mode: 'range',
+  dateFormat: 'j M Y',
+  minDate: 'today',
+  showMonths: 2,
+  altInput: false,
 });
 
 // Init
